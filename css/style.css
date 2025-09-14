@@ -421,6 +421,41 @@ h6,
 /*** About End ***/
 
 
+/* CEO */
+
+.ceo {
+    background: linear-gradient(  rgba(255, 248, 236, 0.932)), url(../img/Solomon.png);
+    background-position: center center;
+    background-repeat: no-repeat;
+    background-size: cover;
+}
+/* CEO */
+
+
+/* CEO start */
+
+.ceo {
+    background: linear-gradient(  rgba(255, 248, 236, 0.932)), url(../img/Solomon.png);
+    background-position: center center;
+    background-repeat: no-repeat;
+    background-size: cover;
+}
+/* CEO end */
+
+
+/* lead start */
+
+.lead {
+    background: linear-gradient(  rgba(14, 19, 82, 0.87)), url(../img/Dickson-square.png);
+    background-position: center center;
+    background-repeat: no-repeat;
+    background-size: contain;
+}
+/* lead end */
+
+
+
+
 /*** service Start ***/
 .service {
     background: linear-gradient(rgba(255, 72, 128, 0.05), rgba(255, 72, 128, 0.2));
