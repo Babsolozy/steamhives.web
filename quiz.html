@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Machine Quiz</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: linear-gradient(to right, #fceabb, #f8b500);
+      margin: 0;
+      padding: 0;
+    }
+    .container {
+      max-width: 700px;
+      margin: 50px auto;
+      background: white;
+      padding: 30px;
+      border-radius: 12px;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+    }
+    h1, h2 {
+      text-align: center;
+      color: #2c3e50;
+    }
+    .question {
+      margin-top: 20px;
+    }
+    .option {
+      background: #f1f1f1;
+      padding: 12px;
+      border-radius: 8px;
+      margin: 10px 0;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+    .option:hover {
+      background: #dff9fb;
+      transform: scale(1.02);
+    }
+    .correct { background: #2ecc71 !important; color: white; }
+    .wrong { background: #e74c3c !important; color: white; }
+    .next-btn, .start-btn {
+      display: block;
+      margin: 20px auto 0;
+      padding: 10px 20px;
+      background: #3498db;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 16px;
+    }
+    .next-btn:hover { background: #2980b9; }
+    .progress-bar {
+      height: 20px;
+      background: #eee;
+      border-radius: 10px;
+      overflow: hidden;
+      margin-bottom: 20px;
+    }
+    .progress {
+      height: 100%;
+      width: 0%;
+      background: #27ae60;
+      transition: width 0.5s ease;
+    }
+    #nameSection {
+      text-align: center;
+    }
+    input[type="text"] {
+      padding: 10px;
+      width: 80%;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      margin-top: 10px;
+    }
+    .hidden { display: none; }
+    .feedback {
+      font-weight: bold;
+      margin-top: 15px;
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Manual vs Automatic Machines</h1>
+
+    <div class="progress-bar">
+      <div class="progress" id="progress"></div>
+    </div>
+
+    <div id="nameSection">
+      <h2>Enter Your Name to Start</h2>
+      <input type="text" id="studentName" placeholder="e.g. Alice" />
+      <button class="start-btn" onclick="startQuiz()">Start Quiz</button>
+    </div>
+
+    <div id="quiz" class="hidden"></div>
+  </div>
+
+  <script>
+    const questions = [
+      {
+        question: "Which of the following is a manual machine?",
+        options: ["Washing Machine", "Hand Pump", "Dishwasher", "Elevator"],
+        answer: 1
+      },
+      {
+        question: "What type of machine is a microwave?",
+        options: ["Manual", "Mechanical", "Automatic", "Hybrid"],
+        answer: 2
+      },
+      {
+        question: "Which machine requires human effort to operate?",
+        options: ["ATM", "Hand Fan", "Elevator", "Microwave"],
+        answer: 1
+      },
+      {
+        question: "A bicycle is an example of a:",
+        options: ["Semi-automatic Machine", "Manual Machine", "Automatic Machine", "Electronic Machine"],
+        answer: 1
+      },
+      {
+        question: "Which of these machines can work on its own after being programmed?",
+        options: ["Mortar and Pestle", "Manual Sewing Machine", "Air Conditioner", "Hammer"],
+        answer: 2
+      }
+    ];
+
+    let currentQuestion = 0;
+    let score = 0;
+    let locked = false;
+    let studentName = "";
+
+    const quizContainer = document.getElementById("quiz");
+    const progressBar = document.getElementById("progress");
+
+    function startQuiz() {
+      const input = document.getElementById("studentName");
+      if (input.value.trim() === "") {
+        alert("Please enter your name.");
+        return;
+      }
+      studentName = input.value.trim();
+      document.getElementById("nameSection").classList.add("hidden");
+      quizContainer.classList.remove("hidden");
+      loadQuestion();
+    }
+
+    function loadQuestion() {
+      locked = false;
+      const q = questions[currentQuestion];
+      progressBar.style.width = ((currentQuestion) / questions.length) * 100 + "%";
+
+      quizContainer.innerHTML = `
+        <div class="question">
+          <h2>Question ${currentQuestion + 1} of ${questions.length}</h2>
+          <p>${q.question}</p>
+          ${q.options.map((opt, i) => `
+            <div class="option" onclick="selectAnswer(${i})">${opt}</div>
+          `).join('')}
+          <div class="feedback" id="feedback"></div>
+          <button class="next-btn hidden" id="nextBtn" onclick="nextQuestion()">Next</button>
+        </div>
+      `;
+    }
+
+    function selectAnswer(index) {
+      if (locked) return;
+      locked = true;
+
+      const options = document.querySelectorAll(".option");
+      const feedback = document.getElementById("feedback");
+      const nextBtn = document.getElementById("nextBtn");
+
+      if (index === questions[currentQuestion].answer) {
+        options[index].classList.add("correct");
+        feedback.textContent = "✅ Correct!";
+        score++;
+      } else {
+        options[index].classList.add("wrong");
+        options[questions[currentQuestion].answer].classList.add("correct");
+        feedback.textContent = "❌ Wrong!";
+      }
+
+      nextBtn.classList.remove("hidden");
+    }
+
+    function nextQuestion() {
+      currentQuestion++;
+      if (currentQuestion < questions.length) {
+        loadQuestion();
+      } else {
+        showResult();
+      }
+    }
+
+    function showResult() {
+      progressBar.style.width = "100%";
+      quizContainer.innerHTML = `
+        <h2>🎉 Quiz Complete!</h2>
+        <p><strong>${studentName}</strong>, you scored <strong>${score}/${questions.length}</strong></p>
+        <p>Submitting your result...</p>
+      `;
+      submitToGoogleSheet(studentName, score);
+    }
+
+    function submitToGoogleSheet(name, score) {
+      const endpoint = 'https://script.google.com/macros/s/AKfycbwBFwN0Q8vjIZTBO07O3IbYM6iOhzv7E9HsFZnDFOZYOCdIA_Q0FQv4MlXcgIJiqAyT/exec';
+
+      fetch(endpoint, {
+        method: 'POST',
+        body: JSON.stringify({ name: name, score: score }),
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      })
+      .then(res => res.text())
+      .then(data => {
+        quizContainer.innerHTML += `<p>✅ Result saved to Google Sheet!</p>`;
+      })
+      .catch(err => {
+        quizContainer.innerHTML += `<p>⚠️ Error saving result. Try again later.</p>`;
+        console.error("Error submitting:", err);
+      });
+    }
+  </script>
+</body>
+</html>
