@@ -48,143 +48,198 @@
           <!-- Template Stylesheet -->
           <link href="css/style.css" rel="stylesheet">
   
-        <style>
-          body {
-            font-family: 'Segoe UI', sans-serif;
-            background: linear-gradient(to right, #fceabb, #f8b500);
-            margin: 0;
-            padding: 0;
-          }
-          .container {
-            max-width: 700px;
-            margin: 50px auto;
-            background: white;
-            padding: 30px;
-            border-radius: 12px;
-            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
-          }
-          h1, h2 {
-            text-align: center;
-            color: #2c3e50;
-          }
-          .question {
-            margin-top: 20px;
-          }
-          .option {
-            background: #f1f1f1;
-            padding: 12px;
-            border-radius: 8px;
-            margin: 10px 0;
-            cursor: pointer;
-            transition: 0.3s;
-          }
-          .option:hover {
-            background: #dff9fb;
-            transform: scale(1.02);
-          }
-          .correct { background: #2ecc71 !important; color: white; }
-          .wrong { background: #e74c3c !important; color: white; }
-          .next-btn, .start-btn {
-            display: block;
-            margin: 20px auto 0;
-            padding: 10px 20px;
-            background: #3498db;
-            color: white;
-            border: none;
-            border-radius: 6px;
-            cursor: pointer;
-            font-size: 16px;
-          }
-          .next-btn:hover { background: #2980b9; }
-          .progress-bar {
-            height: 20px;
-            background: #eee;
-            border-radius: 10px;
-            overflow: hidden;
-            margin-bottom: 20px;
-          }
-          .progress {
-            height: 100%;
-            width: 0%;
-            background: #27ae60;
-            transition: width 0.5s ease;
-          }
-          #nameSection {
-            text-align: center;
-          }
-          input[type="text"] {
-            padding: 10px;
-            width: 80%;
-            border: 1px solid #ccc;
-            border-radius: 6px;
-            margin-top: 10px;
-          }
-          .hidden { display: none; }
-          .feedback {
-            font-weight: bold;
-            margin-top: 15px;
-            text-align: center;
-          }
-        </style>
-    </head>
+       <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: linear-gradient(to right, #fceabb, #f8b500);
+      margin: 0;
+      padding: 0;
+    }
 
+    .container {
+      max-width: 700px;
+      margin: 50px auto;
+      background: #fff;
+      padding: 30px;
+      border-radius: 12px;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+    }
+
+    h1, h2 {
+      text-align: center;
+      color: #2c3e50;
+    }
+
+    .question {
+      margin-top: 20px;
+    }
+
+    .option {
+      background: #f1f1f1;
+      padding: 12px;
+      border-radius: 8px;
+      margin: 10px 0;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+
+    .option:hover {
+      background: #dff9fb;
+      transform: scale(1.02);
+    }
+
+    .correct {
+      background: #2ecc71 !important;
+      color: white;
+    }
+
+    .wrong {
+      background: #e74c3c !important;
+      color: white;
+    }
+
+    .next-btn, .start-btn {
+      display: block;
+      margin: 20px auto 0;
+      padding: 10px 20px;
+      background: #3498db;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 16px;
+    }
+
+    .next-btn:hover {
+      background: #2980b9;
+    }
+
+    .progress-bar {
+      height: 24px;
+      background: #ddd;
+      border-radius: 12px;
+      overflow: hidden;
+      position: relative;
+      display: none; /* initially hidden */
+      margin-top: 30px;
+    }
+
+    .progress {
+      height: 100%;
+      width: 0%;
+      background: #2ecc71;
+      transition: width 0.5s ease, background-color 0.5s ease;
+      position: relative;
+    }
+
+    #progressText {
+      position: absolute;
+      width: 100%;
+      text-align: center;
+      color: #fff;
+      font-weight: bold;
+      z-index: 2;
+    }
+
+    #nameSection {
+      text-align: center;
+    }
+
+    input[type="text"] {
+      padding: 10px;
+      width: 80%;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      margin-top: 10px;
+    }
+
+    .hidden {
+      display: none;
+    }
+
+    .feedback {
+      font-weight: bold;
+      margin-top: 15px;
+      text-align: center;
+    }
+  </style>
+</head>
 <body>
-
-
-   </head>
-
-    <body>
-
-        <!-- Spinner Start -->
-        <div id="spinner" class="show w-100 vh-100 bg-white position-fixed translate-middle top-50 start-50  d-flex align-items-center justify-content-center">
-            <div class="spinner-grow text-primary" role="status"></div>
-        </div>
-        <!-- Spinner End -->
 
   <div class="container">
     <h1>Manual vs Automatic Machines</h1>
 
-    <div class="progress-bar">
-      <div class="progress" id="progress"></div>
-    </div>
-
+    <!-- Name input section -->
     <div id="nameSection">
       <h2>Enter Your Name to Start</h2>
       <input type="text" id="studentName" placeholder="e.g. Alice" />
       <button class="start-btn" onclick="startQuiz()">Start Quiz</button>
     </div>
 
+    <!-- Quiz content will be injected here -->
     <div id="quiz" class="hidden"></div>
+
+    <!-- Progress Bar at Bottom -->
+    <div class="progress-bar" id="progressWrapper">
+      <div class="progress" id="progress">
+        <span id="progressText">0%</span>
+      </div>
+    </div>
   </div>
 
   <script>
     const questions = [
-      {
-        question: "Which of the following is a manual machine?",
-        options: ["Washing Machine", "Hand Pump", "Dishwasher", "Elevator"],
-        answer: 1
-      },
-      {
-        question: "What type of machine is a microwave?",
-        options: ["Manual", "Mechanical", "Automatic", "Hybrid"],
-        answer: 2
-      },
-      {
-        question: "Which machine requires human effort to operate?",
-        options: ["ATM", "Hand Fan", "Elevator", "Microwave"],
-        answer: 1
-      },
-      {
-        question: "A bicycle is an example of a:",
-        options: ["Semi-automatic Machine", "Manual Machine", "Automatic Machine", "Electronic Machine"],
-        answer: 1
-      },
-      {
-        question: "Which of these machines can work on its own after being programmed?",
-        options: ["Mortar and Pestle", "Manual Sewing Machine", "Air Conditioner", "Hammer"],
-        answer: 2
-      }
-    ];
+  {
+    question: "Which of the following is a manual machine?",
+    options: ["Washing Machine", "Hand Pump", "Dishwasher", "Elevator"],
+    answer: 1
+  },
+  {
+    question: "What type of machine is a microwave? ",
+    options: ["Manual", "Mechanical", "Automatic", "Hybrid"],
+    answer: 2
+  },
+  {
+    question: "Which machine requires human effort to operate?",
+    options: ["ATM", "Hand Fan", "Elevator", "Microwave"],
+    answer: 1
+  },
+  {
+    question: "A bicycle is an example of a:",
+    options: ["Semi-automatic Machine", "Manual Machine", "Automatic Machine", "Electronic Machine"],
+    answer: 1
+  },
+  {
+    question: "Which of these machines can work on its own after being programmed? ",
+    options: ["Mortar and Pestle", "Manual Sewing Machine", "Air Conditioner", "Hammer"],
+    answer: 2
+  },
+  {
+    question: "Examples of manual machines include ____, ____ and ____.",
+    options: ["Bicycle, hand fan, and wheelbarrow", "Microwave, fan, and oven", "Car, train, and airplane", "Robot, elevator, and computer"],
+    answer: 0
+  },
+  {
+    question: "____ and ____ machines were discussed in the video.",
+    options: ["Manual and automatic", "Electric and hydraulic", "Digital and analog", "Steam and pneumatic"],
+    answer: 0
+  },
+  {
+    question: "Automatic machines can be powered by ____, ____ and ____.",
+    options: ["Electricity, batteries, and fuel", "Steam, water, and manpower", "Wind, solar, and muscles", "Fuel, muscle, and water"],
+    answer: 0
+  },
+  {
+    question: "Which machine is NOT a manual machine? ",
+    options: ["Hand pump", "Hammer", "Electric fan", "Wheelbarrow"],
+    answer: 2
+  },
+  {
+    question: "What is the main power source for most automatic machines?",
+    options: ["Electricity", "Muscle power", "Water", "Wind"],
+    answer: 0
+  }
+];
 
     let currentQuestion = 0;
     let score = 0;
@@ -193,6 +248,8 @@
 
     const quizContainer = document.getElementById("quiz");
     const progressBar = document.getElementById("progress");
+    const progressText = document.getElementById("progressText");
+    const progressWrapper = document.getElementById("progressWrapper");
 
     function startQuiz() {
       const input = document.getElementById("studentName");
@@ -203,13 +260,26 @@
       studentName = input.value.trim();
       document.getElementById("nameSection").classList.add("hidden");
       quizContainer.classList.remove("hidden");
+      progressWrapper.style.display = "block";
       loadQuestion();
     }
 
     function loadQuestion() {
       locked = false;
       const q = questions[currentQuestion];
-      progressBar.style.width = ((currentQuestion) / questions.length) * 100 + "%";
+      const progressPercent = Math.round((currentQuestion / questions.length) * 100);
+
+      // Animate progress and update color
+      progressBar.style.width = progressPercent + "%";
+      progressText.textContent = progressPercent + "%";
+
+      if (progressPercent >= 80) {
+        progressBar.style.backgroundColor = "#2ecc71"; // Green
+      } else if (progressPercent >= 50) {
+        progressBar.style.backgroundColor = "#f1c40f"; // Yellow
+      } else {
+        progressBar.style.backgroundColor = "#e74c3c"; // Red
+      }
 
       quizContainer.innerHTML = `
         <div class="question">
@@ -256,16 +326,20 @@
 
     function showResult() {
       progressBar.style.width = "100%";
+      progressText.textContent = "100%";
+      progressBar.style.backgroundColor = "#2ecc71";
+
       quizContainer.innerHTML = `
         <h2>🎉 Quiz Complete!</h2>
         <p><strong>${studentName}</strong>, you scored <strong>${score}/${questions.length}</strong></p>
         <p>Submitting your result...</p>
       `;
+
       submitToGoogleSheet(studentName, score);
     }
 
     function submitToGoogleSheet(name, score) {
-      const endpoint = 'https://script.google.com/macros/s/AKfycbwBFwN0Q8vjIZTBO07O3IbYM6iOhzv7E9HsFZnDFOZYOCdIA_Q0FQv4MlXcgIJiqAyT/exec';
+      const endpoint = 'https://script.google.com/macros/s/AKfycbyf4Frzp85WfVjfzaRFCCJOMBcHKtU4smZ9pfsmMhA/dev';
 
       fetch(endpoint, {
         method: 'POST',
